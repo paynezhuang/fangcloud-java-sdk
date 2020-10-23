@@ -13,11 +13,7 @@ import com.fangcloud.sdk.exception.YfyException;
 import com.fangcloud.sdk.util.IOUtil;
 import com.fangcloud.sdk.util.StringUtil;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -362,7 +358,12 @@ public class YfyFileRequest {
      */
     public String preSignatureUpload(long parentId, String name) throws YfyException {
         StringUtil.checkStringNotEmpty(name);
-        return preSignatureUpload(new PreSignatureUploadArg(parentId, name, "api")).getUploadUrl();
+        return preSignatureUpload(new PreSignatureUploadArg(parentId, name, "api",true)).getUploadUrl();
+    }
+
+    public String preSignatureUpload(long parentId, String name, boolean isCovered) throws YfyException {
+        StringUtil.checkStringNotEmpty(name);
+        return preSignatureUpload(new PreSignatureUploadArg(parentId, name, "api", isCovered)).getUploadUrl();
     }
 
     private PreSignatureUploadResult preSignatureUpload(PreSignatureUploadArg preSignatureUploadArg)
@@ -477,6 +478,10 @@ public class YfyFileRequest {
      */
     public YfyFile directUploadFile(long parentId, String name, String filePath) throws YfyException, FileNotFoundException {
         return uploadFile(preSignatureUpload(parentId, name), filePath);
+    }
+
+    public YfyFile directUploadFile(long parentId, String name, String filePath, boolean isCovered) throws YfyException, FileNotFoundException {
+        return uploadFile(preSignatureUpload(parentId, name, isCovered), filePath);
     }
 
     /**
